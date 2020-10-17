@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {Component} from 'react';
+import { render } from 'react-dom';
+import { Pie } from 'react-chartjs-2';
+import { axios } from 'axios';
 
 function HomePage() {
   return (
@@ -75,5 +78,60 @@ function HomePage() {
     
   );
 }
+class ChartPageComponent extends Component {
+  constructor(props){
+      super(props);
+      this.state = {
+          datasets : [
+          {
+            data: [30, 350, 90],
+                    backgroundColor: [
+                        '#ffcd56',
+                        '#ff6384',
+                        '#36a2eb',
+                        '#fd6b19',
+                        '#f542e9',
+                        '#42f55d',
+                        '#42f5dd'
+                    ],
+          }
+          ],
+          labels: [
+            'Eat out1',
+            'Rent1',
+            'Groceries1'
+        ]
+      };
+      console.log("props data ",props.datasets)
+  }
 
+
+  render(){
+      return(
+          <Pie 
+          data={this.state.datasets}
+          options={{
+              title:'cool pie chart',
+              text:"coolest data"
+          }}
+          />
+      );
+  }
+
+getBudget() {
+  axios.get('/budget').then(function (res) {
+      console.log(res.data);
+      for (var i = 0; i < res.data.myBudget.length; i++) {
+          //dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+          //dataSource.labels[i] = res.data.myBudget[i].title;
+          
+          //this.state.datasets[0].data[i] = res.data.myBudget[i].budget;
+          this.setState(this.datasets[0].data[i], res.data.myBudget[i].budget);
+          // this.state.labels[i] = res.data.myBudget[i].title;
+          this.setState(this.labels[i], res.data.myBudget[i].title);
+      }
+  });
+      render(<ChartPageComponent />, document.getElementById('root'));
+}
+}
 export default HomePage;
