@@ -71,8 +71,8 @@ function HomePage() {
             </article>
 
         </div>
-
     </main>
+    
   );
 }
 

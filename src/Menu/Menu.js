@@ -6,15 +6,13 @@ import {
 
 function Menu() {
   return (
-    <div>
-    <div class="menu">
+    <nav>
         <ul>
             <li><Link itemProp="url" to="/">Home</Link></li>
             <li><Link itemProp="url" to="/about">About</Link></li>
             <li><Link itemProp="url" to="/login">Login</Link></li>
         </ul>
-    </div>
-    </div>
+    </nav>
   );
 }
 
