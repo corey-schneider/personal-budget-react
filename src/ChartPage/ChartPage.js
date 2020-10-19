@@ -1,92 +1,113 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Chart } from 'react-chartjs-2';
+//Thank you to https://stackoverflow.com/questions/60433572/how-to-use-axios-api-with-chart-js-and-react-js
+
+import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import axios from "axios";
 
 function ChartPage() {
-    const [ currentState, setState ] = useState(0);
-    useEffect(() => {
-        axios.get('http://localhost:3001/budget')
-            .then(res => {
-                var dataSource = {
-                    datasets: [
-                        {
-                            data: [ ],
-                            backgroundColor: [
-                                '#ffcd56',
-                                '#ff6384',
-                                '#36a2eb',
-                                '#fd6b19',
-                                '#f542e9',
-                                '#42f55d',
-                                '#42f5dd'
-                            ],
-                        }
-                    ],
-                    labels: [ ]
-                };
-                console.log(res.data);
-                for (var i = 0; i < res.data.myBudget.length; i++) {
-                    //dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                    //dataSource.labels[i] = res.data.myBudget[i].title;
-                    
-                    dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                    dataSource.labels[i] = res.data.myBudget[i].title;
-                    
-                }
-                createChart();
-                function createChart() {
-                    var ctx = document.getElementById("myChart").getContext("2d");
-                    var myPieChart = new Chart(ctx, {
-                        type: 'pie',
-                        data: dataSource
-                    });
-                }
-            });
-    }, []);
 
-    return (
-        <>
-        <h1>HELLO from ChartPage!</h1>
-        </>
-    // constructor(props){
-    //     super(props);
-    //     this.state = {
-    //         chartData : [
-    //         {
-    //             value: 300,
-    //             color:"#F7464A",
-    //             highlight: "#FF5A5E",
-    //             label: "Red"
-    //         },
-    //         {
-    //             value: 50,
-    //             color: "#46BFBD",
-    //             highlight: "#5AD3D1",
-    //             label: "Green"
-    //         },
-    //         {
-    //             value: 100,
-    //             color: "#FDB45C",
-    //             highlight: "#FFC870",
-    //             label: "Yellow"
-    //         }
-    //     ]
-    //     }
-    //     console.log("props data ",props.chartData)
-    // }
+ const [data, setData] = useState([]);
+ const [posts, setPosts] = useState([]);
 
-    // render(){
-    //     return(
-    //         <Pie 
-    //         data={this.state.chartData}
-    //         options={{
-    //             title:'cool pie chart',
-    //             text:"coolest data"
-    //         }}
-    //         />
-    //     );
-    // }
-    );
+ let title1 = []
+ let budget1 = []
+
+ useEffect(() => {
+
+   axios.get("http://localhost:3001/budget").then(res => {
+       const ipl = res.data.myBudget;
+       console.log(res.data.myBudget);
+     setPosts(ipl);
+
+     ipl.forEach(record => {
+         title1.push(record.title);
+         budget1.push(record.budget);
+       });
+
+
+     setData({
+       Data: {
+         labels: title1,
+         datasets: [
+           {
+             data: budget1,
+             backgroundColor: [
+                '#ffcd56',
+                '#ff6384',
+                '#36a2eb',
+                '#fd6b19',
+                '#f542e9',
+                '#42f55d',
+                '#42f5dd'
+             ]
+           }
+         ]
+       }
+     });
+
+   });
+ }, []);
+
+ return (
+   <div>
+       <h1>Hello from ChartPage</h1>
+     <Pie data={data.Data}></Pie>
+   </div>
+ );
 }
 
 export default ChartPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const state = {
+//     labels: [],
+//     datasets: [
+//       {
+//         data: [],
+//         backgroundColor: [
+//             '#ffcd56',
+//             '#ff6384',
+//             '#36a2eb',
+//             '#fd6b19',
+//             '#f542e9',
+//             '#42f55d',
+//             '#42f5dd'
+//         ],
+//       }
+//     ]
+//   }
+
+// export default class ChartPage extends React.Component {
+//     render() {
+//       return (
+//         <div>
+//           <Pie
+//             data={state}
+//             options={{
+//               title:{
+//                 display:true,
+//                 text:'Average Rainfall per month',
+//                 fontSize:20
+//               },
+//               legend:{
+//                 display:true,
+//                 position:'right'
+//               }
+//             }}
+//           />
+//           </div>
+//       );
+//     }
+// }
